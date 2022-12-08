@@ -1,0 +1,80 @@
+@page
+@model Final3312.Pages.Posts.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<form>
+	<select asp-for="CurrentSort" asp-items="Model.SortList">
+		<option value="">sort by...</option>
+	</select>
+	<button type="submit">Sort</button>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.post[0].UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.post[0].postedPath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.post[0].postTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.post) {
+        <tr>
+            <td>
+                @{
+                    var username=Model.findUser(item.UserID);
+                }
+                @username
+            </td>
+            <td>
+                @{
+                    var relPath="../"+item.postedPath;
+                }
+                <img runat="server" src="@relPath" alt="Post" style="width:250px;height:250px;">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.postTime)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.PostID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.PostID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.PostID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<hr />
+@{
+    var prevDisabled = "";
+    if (Model.PageNum <= 1)
+    {
+        prevDisabled = "disabled";
+    }
+    var nextDisabled = "";
+    if (Model.PageNum*Model.PageSize >= Model.Items)
+    {
+        nextDisabled = "disabled";
+    }
+}
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <!-- FIXME: These buttons will forget your current sort order! -->
+        <li class="page-item @prevDisabled"><a class="page-link" asp-page="./Index" asp-route-PageNum="@(Model.PageNum - 1)" asp-route-CurrentSort="@(Model.CurrentSort)">Previous</a></li>
+        <li class="page-item @nextDisabled"><a class="page-link" asp-page="./Index" asp-route-PageNum="@(Model.PageNum + 1)" asp-route-CurrentSort="@(Model.CurrentSort)">Next</a></li>
+    </ul>
+</nav>
