@@ -34,24 +34,31 @@ namespace Final3312.Pages.Posts
 
         public async Task OnGetAsync()
         {
-            var query = _context.post.Select(p => p);
-            Items=query.Count();
-            List<SelectListItem> sortItems = new List<SelectListItem> {
-                new SelectListItem { Text = "Date & Time Ascending", Value = "DT_asc" },
-                new SelectListItem { Text = "Date & Time Descending", Value = "DT_desc"}
-            };
-            SortList = new SelectList(sortItems, "Value", "Text", CurrentSort);
-
-            switch (CurrentSort)
+            if(!@Pages.IndexModel.loginpass)
             {
-                case "DT_asc": 
-                    query = query.OrderBy(p => p.postTime);
-                    break;
-                case "DT_desc":
-                    query = query.OrderByDescending(p => p.postTime);
-                    break;
+                Response.Redirect("../index");
             }
-            post = await query.Skip((PageNum-1)*PageSize).Take(PageSize).ToListAsync();
+            else
+            {
+                var query = _context.post.Select(p => p);
+                Items=query.Count();
+                List<SelectListItem> sortItems = new List<SelectListItem> {
+                    new SelectListItem { Text = "Date & Time Ascending", Value = "DT_asc" },
+                    new SelectListItem { Text = "Date & Time Descending", Value = "DT_desc"}
+                };
+                SortList = new SelectList(sortItems, "Value", "Text", CurrentSort);
+
+                switch (CurrentSort)
+                {
+                    case "DT_asc": 
+                        query = query.OrderBy(p => p.postTime);
+                        break;
+                    case "DT_desc":
+                        query = query.OrderByDescending(p => p.postTime);
+                        break;
+                }
+                post = await query.Skip((PageNum-1)*PageSize).Take(PageSize).ToListAsync();
+            }
         }
     }
 }

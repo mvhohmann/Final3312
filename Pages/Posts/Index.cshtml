@@ -32,29 +32,42 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.post) {
-        <tr>
-            <td>
+@if(@Pages.IndexModel.loginpass){
+    @foreach (var item in Model.post) {
+            <tr>
+                <td>
+                    @{
+                        var username=Model.findUser(item.UserID);
+                    }
+                    @username
+                </td>
+                <td>
+                    @{
+                        var relPath="../"+item.postedPath;
+                    }
+                    <img runat="server" src="@relPath" alt="Post" style="width:250px;height:250px;">
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.postTime)
+                </td>
                 @{
-                    var username=Model.findUser(item.UserID);
+                    if(@Pages.IndexModel.login==item.UserID)
+                    {
+                        <td>
+                            <a asp-page="./Edit" asp-route-id="@item.PostID">Edit</a> | 
+                            <a asp-page="./Details" asp-route-id="@item.PostID">Details</a> |
+                            <a asp-page="./Delete" asp-route-id="@item.PostID">Delete</a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a asp-page="./Details" asp-route-id="@item.PostID">Details</a>
+                        </td>
+                    }
                 }
-                @username
-            </td>
-            <td>
-                @{
-                    var relPath="../"+item.postedPath;
-                }
-                <img runat="server" src="@relPath" alt="Post" style="width:250px;height:250px;">
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.postTime)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.PostID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.PostID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.PostID">Delete</a>
-            </td>
-        </tr>
+            </tr>
+    }
 }
     </tbody>
 </table>

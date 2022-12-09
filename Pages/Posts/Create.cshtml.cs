@@ -20,7 +20,14 @@ namespace Final3312.Pages.Posts
 
         public IActionResult OnGet()
         {
-            return Page();
+            if(!@Pages.IndexModel.loginpass)
+            {
+                return Redirect("../index");
+            }
+            else
+            {
+                return Page();
+            }
         }
 
         [BindProperty]

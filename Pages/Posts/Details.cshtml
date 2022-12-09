@@ -15,13 +15,19 @@
             @Html.DisplayNameFor(model => model.post!.UserID)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.post!.UserID)
+            @{
+                var username=Model.findUser(@Model.post!.UserID);
+            }
+            @username
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.post!.postedPath)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.post!.postedPath)
+            @{
+                var relPath="../"+@Model.post!.postedPath;
+            }
+            <img runat="server" src="@relPath" alt="Post" style="width:250px;height:250px;">
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.post!.postTime)
@@ -32,6 +38,74 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Edit" asp-route-id="@Model.post!.PostID">Edit</a> |
-    <a asp-page="./Index">Back to List</a>
+    @{
+        var like=Model.findLike(@Pages.IndexModel.login,@Model.post!.PostID,0);
+        var likes=Model.likes;
+        var dislikes=Model.dislikes;
+        if(like==0)
+        {
+            <a asp-page="./Like" asp-route-id="@Model.post!.PostID" asp-route-liked="1"><input type="image" src="../img/UnclickedUp.jpg" style="width:50px;height:50px;"/></a>@likes
+            <a asp-page="./Like" asp-route-id="@Model.post!.PostID" asp-route-liked="2"><input type="image" src="../img/UnclickedDown.jpg" style="width:50px;height:50px;"/></a>@dislikes
+        }
+        else if(like==1)
+        {
+            <a asp-page="./Like" asp-route-id="@Model.post!.PostID" asp-route-liked="0"><input type="image" src="../img/ClickedUp.jpg" style="width:50px;height:50px;"/></a>@likes
+            <a asp-page="./Like" asp-route-id="@Model.post!.PostID" asp-route-liked="2"><input type="image" src="../img/UnclickedDown.jpg" style="width:50px;height:50px;"/></a>@dislikes
+        }
+        else
+        {
+            <a asp-page="./Like" asp-route-id="@Model.post!.PostID" asp-route-liked="1"><input type="image" src="../img/UnclickedUp.jpg" style="width:50px;height:50px;"/></a>@likes
+            <a asp-page="./Like" asp-route-id="@Model.post!.PostID" asp-route-liked="0"><input type="image" src="../img/ClickedDown.jpg" style="width:50px;height:50px;"/></a>@dislikes
+        }
+    }
 </div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.comments[0].UserID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.comments[0].commented)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.comments[0].commentTime)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @if(@Pages.IndexModel.loginpass){
+        @foreach (var item in Model.comments) {
+            <tr>
+                <td>
+                    @{
+                        var cUsername=Model.findUser(item.UserID);
+                    }
+                    @cUsername
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.commented)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.commentTime)
+                </td>
+            </tr>
+            }
+        }
+    </tbody>
+</table>
+@{
+    if(@Pages.IndexModel.login==@Model.post!.UserID)
+    {
+        <div>
+            <a asp-page="./Edit" asp-route-id="@Model.post!.PostID">Edit</a> |
+            <a asp-page="./Index">Back to List</a>
+        </div>
+    }
+    else
+    {
+        <div>
+            <a asp-page="./Index">Back to List</a>
+        </div>
+    }
+}

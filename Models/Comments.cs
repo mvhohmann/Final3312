@@ -7,11 +7,13 @@ using System.ComponentModel.DataAnnotations;
       public class comment
       {
         public int CommentID {get; set;}// This is the "primary key"
+        [Display(Name = "Commenter")]
         [Required]
         public int UserID {get; set;}
         [Required]
         public int PostID {get; set;}
         public int? ReplyCommentID {get; set;}
+        [Display(Name = "Comment")]
         [StringLength(260)]
         [Required]
         public string commented {get; set;} = string.Empty;

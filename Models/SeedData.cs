@@ -13,7 +13,8 @@ namespace Final3312
                 if (!context.user.Any())
                 {
                     context.user.AddRange(
-                        new user{username="admin",password=Hash.hash256("admin","1")}
+                        new user{username="admin",password=Hash.hash256("admin","1")},
+                        new user{username="test",password=Hash.hash256("test","2")}
                     );
                     context.SaveChanges();
                 }

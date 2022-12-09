@@ -24,6 +24,10 @@ namespace Final3312.Pages.Posts
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            if(!@Pages.IndexModel.loginpass)
+            {
+                Response.Redirect("../index");
+            }
             if (id == null)
             {
                 return NotFound();
@@ -31,7 +35,7 @@ namespace Final3312.Pages.Posts
 
             post = await _context.post.FirstOrDefaultAsync(m => m.PostID == id);
 
-            if (post == null)
+            if (post == null||@Pages.IndexModel.login!=post.UserID)
             {
                 return NotFound();
             }

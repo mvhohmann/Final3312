@@ -11,6 +11,8 @@ public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
     private readonly DBContext _context;
+    public static int login=0;
+    public static bool loginpass=false;
     [BindProperty]
     [Display(Name = "Username")]
     [StringLength(60,MinimumLength =3)]
@@ -31,7 +33,8 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-
+        login=0;
+        loginpass=false;
     }
     public void OnPost()
     {
@@ -39,7 +42,9 @@ public class IndexModel : PageModel
         var holder=_context.user.FirstOrDefault(user => user.username == Username);
         if(holder!=null&&holder.password==Hash.hash256(Password,holder.UserID.ToString()))
         {
-            //identification
+            //add identification to replace login
+            login=holder.UserID;
+            loginpass=true;
             Response.Redirect("/posts");
         }
     }

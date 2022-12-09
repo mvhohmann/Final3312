@@ -13,8 +13,7 @@ using System.ComponentModel.DataAnnotations;
         public int UserID {get;set;}
         public int? CommentID {get; set;}
         [Required]
+        //should be bool
         public int likes {get; set;}
-        [Required]
-        public int dislikes {get; set;}
       }
   }
